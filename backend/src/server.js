@@ -16,6 +16,23 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+app.use((error, req, res, _next) => {
+  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+    return res.status(400).json({
+      message: 'JSON invalido.'
+    });
+  }
+
+  console.error(error);
+  return res.status(500).json({
+    message: 'Erro interno do servidor.'
+  });
 });
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+module.exports = app;

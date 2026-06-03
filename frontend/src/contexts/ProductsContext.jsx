@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import {
   createProduct as createProductRequest,
   deleteProduct as deleteProductRequest,
@@ -20,7 +20,7 @@ function ProductsProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchProducts() {
+  const fetchProducts = useCallback(async function fetchProducts() {
     setLoading(true);
     setError(null);
 
@@ -35,9 +35,9 @@ function ProductsProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
-  async function createProduct(productData) {
+  const createProduct = useCallback(async function createProduct(productData) {
     setLoading(true);
     setError(null);
 
@@ -52,9 +52,9 @@ function ProductsProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
-  async function deleteProduct(id) {
+  const deleteProduct = useCallback(async function deleteProduct(id) {
     setLoading(true);
     setError(null);
 
@@ -71,16 +71,19 @@ function ProductsProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
-  const contextValue = {
-    products,
-    loading,
-    error,
-    fetchProducts,
-    createProduct,
-    deleteProduct
-  };
+  const contextValue = useMemo(
+    () => ({
+      products,
+      loading,
+      error,
+      fetchProducts,
+      createProduct,
+      deleteProduct
+    }),
+    [products, loading, error, fetchProducts, createProduct, deleteProduct]
+  );
 
   return <ProductsContext.Provider value={contextValue}>{children}</ProductsContext.Provider>;
 }

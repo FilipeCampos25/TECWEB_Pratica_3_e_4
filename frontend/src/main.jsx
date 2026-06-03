@@ -7,6 +7,7 @@ import './styles/global.css';
 import './styles/navbar.css';
 import './styles/home.css';
 import './styles/form.css';
+import './styles/list.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

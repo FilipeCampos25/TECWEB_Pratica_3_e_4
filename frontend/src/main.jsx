@@ -6,6 +6,7 @@ import { ProductsProvider } from './contexts/ProductsContext.jsx';
 import './styles/global.css';
 import './styles/navbar.css';
 import './styles/home.css';
+import './styles/form.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,3 +1,5 @@
+import { useProducts } from '../contexts/ProductsContext.jsx';
+
 function formatCurrency(value) {
   const numericValue = Number(value);
 
@@ -32,6 +34,20 @@ function formatDate(value) {
 }
 
 function ProductCard({ product }) {
+  const { deleteProduct, loading } = useProducts();
+
+  function handleDelete() {
+    const shouldDelete = window.confirm(`Deseja excluir o produto "${product.name}"?`);
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    deleteProduct(product.id).catch(() => {
+      // O erro da requisicao e exibido pela listagem por meio do Context.
+    });
+  }
+
   return (
     <article className="product-card">
       <div className="product-card-header">
@@ -54,6 +70,17 @@ function ProductCard({ product }) {
           <dd>{formatDate(product.createdAt)}</dd>
         </div>
       </dl>
+
+      <div className="product-card-actions">
+        <button
+          className="delete-button"
+          type="button"
+          onClick={handleDelete}
+          disabled={loading}
+        >
+          Excluir
+        </button>
+      </div>
     </article>
   );
 }
